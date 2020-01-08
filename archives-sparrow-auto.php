@@ -305,7 +305,6 @@ $trucks = AutoPost::metaQuery();
     <header class="page-header">
         <h1 class="entry-title">Our Inventory</h1>
     </header>
-
     <div class="page-content">
         <?php while ( $trucks->have_posts() ) { $trucks->the_post(); ?>
         <article class="post row column-row">
