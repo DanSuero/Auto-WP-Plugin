@@ -7,8 +7,20 @@ setlocale(LC_MONETARY, 'en_US.UTF-8');
 
 global $post;
 
+$grab = get_post_meta($post->ID, "about_the_truck_vin-number", true);
 
+$trucks = new ImportXML();
+$trucks->set_xml_URL("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1&Features=1");
+$xmlQuery = array();
+foreach(ImportXML::$converted_xml->Vehicle as $data){
+    array_push($xmlQuery, "$data->VIN");
+}
+
+$found = array_search($grab, $xmlQuery);
+
+//var_dump(get_post_meta($post->ID,"vdw_gallery_id",true));
 ?>
+
 <style>
     .elementor-341 .elementor-element.elementor-element-c9e194e:not(.elementor-motion-effects-element-type-background),
     .elementor-341 .elementor-element.elementor-element-c9e194e>.elementor-motion-effects-container>.elementor-motion-effects-layer {
@@ -360,20 +372,20 @@ global $post;
 
     .elementor-341 .elementor-element.elementor-element-0ba9d5d a.elementor-button,
     .elementor-341 .elementor-element.elementor-element-0ba9d5d .elementor-button {
-        font-size: 14px;
+        font-size: 18px;
         text-transform: uppercase;
         fill: #ffffff;
         color: #ffffff;
-        background-color: #154d80;
+        background-color: #6ec1e4;
         border-radius: 5px 5px 5px 5px;
-        padding: 10px 20px 10px 20px;
+        padding: 15px 25px 15px 25px;
     }
 
     .elementor-341 .elementor-element.elementor-element-0ba9d5d a.elementor-button:hover,
     .elementor-341 .elementor-element.elementor-element-0ba9d5d .elementor-button:hover,
     .elementor-341 .elementor-element.elementor-element-0ba9d5d a.elementor-button:focus,
     .elementor-341 .elementor-element.elementor-element-0ba9d5d .elementor-button:focus {
-        background-color: #6ec1e4;
+        background-color: #154d80;
     }
 
     .elementor-341 .elementor-element.elementor-element-7c40171 {
@@ -684,7 +696,14 @@ global $post;
     .elementor-341 .elementor-element.elementor-element-4c105d75 .elementor-button:focus {
         background-color: #6ec1e4;
     }
-
+    
+    pre,
+    #elementor-tab-content-1733 p,
+    #elementor-tab-content-1735 p{
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+    }
+    
     @media(max-width:1024px) {
         .elementor-341 .elementor-element.elementor-element-3f63c50 .elementor-heading-title {
             font-size: 36px;
@@ -719,7 +738,7 @@ global $post;
         .elementor-341 .elementor-element.elementor-element-0ba9d5d a.elementor-button,
         .elementor-341 .elementor-element.elementor-element-0ba9d5d .elementor-button {
             font-size: 13px;
-            padding: 7px 5px 5px 15px;
+            
         }
 
         .elementor-341 .elementor-element.elementor-element-5d94658c {
@@ -753,11 +772,11 @@ global $post;
         }
 
         .elementor-341 .elementor-element.elementor-element-a9c9390 {
-            width: 74.386%;
+            width: 60%;
         }
 
         .elementor-341 .elementor-element.elementor-element-37810fa {
-            width: 25.614%;
+            width: 40%;
         }
     }
 
@@ -832,8 +851,20 @@ global $post;
             margin-bottom: 20px;
         }
     }
+    
+    #elementor-tab-content-1732 a{
+        overflow: hidden;
+        height: 113px;
+        width: 150px;
+        display: inline-block;
+    }
+    
+    #elementor-tab-content-1732 a img{
+        max-width: 150px;
+    }
 
 </style>
+
 <div data-elementor-type="wp-page" data-elementor-id="341" class="elementor elementor-341" data-elementor-settings="[]">
     <div class="elementor-inner">
         <div class="elementor-section-wrap">
@@ -885,7 +916,7 @@ global $post;
                                     <div class="elementor-element elementor-element-1101212 elementor-align-center elementor-tablet-align-right elementor-widget elementor-widget-button" data-id="1101212" data-element_type="widget" data-widget_type="button.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-button-wrapper">
-                                                <a href="#" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
+                                                <a href="/place-a-deposit/" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
                                                     <span class="elementor-button-content-wrapper">
                                                         <span class="elementor-button-icon elementor-align-icon-right">
                                                             <i aria-hidden="true" class="fas fa-comment-dollar"></i> </span>
@@ -910,16 +941,16 @@ global $post;
                                     <div class="elementor-element elementor-element-b1e70c6 elementor-widget elementor-widget-image" data-id="b1e70c6" data-element_type="widget" data-widget_type="image.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-image">
-                                                <img width="800" height="600" src="<?php echo wp_get_attachment_url(get_post_meta($post->ID,'vdw_gallery_id',true)[0]); ?>" class="attachment-large size-large" alt="" /> </div>
+                                                <img width="800" height="600" src="<?php echo ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL[0]; ?>" class="attachment-large size-large" alt="" /> </div>
                                         </div>
                                     </div>
                                     <div class="elementor-element elementor-element-d0544ae elementor-arrows-position-outside elementor-pagination-position-outside elementor-widget elementor-widget-image-carousel" data-id="d0544ae" data-element_type="widget" data-settings="{&quot;slides_to_show&quot;:&quot;5&quot;,&quot;slides_to_show_tablet&quot;:&quot;3&quot;,&quot;slides_to_show_mobile&quot;:&quot;3&quot;,&quot;navigation&quot;:&quot;both&quot;,&quot;pause_on_hover&quot;:&quot;yes&quot;,&quot;autoplay&quot;:&quot;yes&quot;,&quot;autoplay_speed&quot;:5000,&quot;infinite&quot;:&quot;yes&quot;,&quot;speed&quot;:500,&quot;direction&quot;:&quot;ltr&quot;}" data-widget_type="image-carousel.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-image-carousel-wrapper swiper-container" dir="ltr">
                                                 <div class="elementor-image-carousel swiper-wrapper">
-                                                    <?php foreach( get_post_meta($post->ID,'vdw_gallery_id')[0] as $img){ ?>
-                                                    <div class="swiper-slide"><a href="<?php echo wp_get_attachment_url($img); ?>" data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="d0544ae" data-elementor-lightbox-index="0">
-                                                            <figure class="swiper-slide-inner"><img class="swiper-slide-image" src="<?php echo wp_get_attachment_thumb_url( $img ); ?>" alt="88c37fae62_1280" /></figure>
+                                                    <?php foreach( ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL as $img){ ?>
+                                                    <div class="swiper-slide"><a href="<?php echo $img; ?>" data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="d0544ae" data-elementor-lightbox-index="0">
+                                                            <figure class="swiper-slide-inner"><img class="swiper-slide-image" src="<?php echo $img; ?>" alt="88c37fae62_1280" /></figure>
                                                         </a></div>
                                                     <?php }?>
                                                 </div>
@@ -941,40 +972,10 @@ global $post;
                         <div class="elementor-element elementor-element-ff19fdd elementor-column elementor-col-50 elementor-top-column" data-id="ff19fdd" data-element_type="column">
                             <div class="elementor-column-wrap  elementor-element-populated">
                                 <div class="elementor-widget-wrap">
-                                    <div class="elementor-element elementor-element-0c86a7a elementor-widget elementor-widget-toggle" data-id="0c86a7a" data-element_type="widget" data-widget_type="toggle.default">
-                                        <div class="elementor-widget-container">
-                                            <div class="elementor-toggle" role="tablist">
-                                                <div class="elementor-toggle-item">
-                                                    <div id="elementor-tab-title-1311" class="elementor-tab-title" data-tab="1" role="tab" aria-controls="elementor-tab-content-1311">
-                                                        <span class="elementor-toggle-icon elementor-toggle-icon-left" aria-hidden="true">
-                                                            <span class="elementor-toggle-icon-closed"><i class="fas fa-caret-right"></i></span>
-                                                            <span class="elementor-toggle-icon-opened"><i class="elementor-toggle-icon-opened fas fa-caret-up"></i></span>
-                                                        </span>
-                                                        <a href="">Contact Us</a>
-                                                    </div>
-                                                    <div id="elementor-tab-content-1311" class="elementor-tab-content elementor-clearfix" data-tab="1" role="tabpanel" aria-labelledby="elementor-tab-title-1311">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="elementor-toggle-item">
-                                                    <div id="elementor-tab-title-1312" class="elementor-tab-title" data-tab="2" role="tab" aria-controls="elementor-tab-content-1312">
-                                                        <span class="elementor-toggle-icon elementor-toggle-icon-left" aria-hidden="true">
-                                                            <span class="elementor-toggle-icon-closed"><i class="fas fa-caret-right"></i></span>
-                                                            <span class="elementor-toggle-icon-opened"><i class="elementor-toggle-icon-opened fas fa-caret-up"></i></span>
-                                                        </span>
-                                                        <a href="">Get a Quote</a>
-                                                    </div>
-                                                    <div id="elementor-tab-content-1312" class="elementor-tab-content elementor-clearfix" data-tab="2" role="tabpanel" aria-labelledby="elementor-tab-title-1312">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="elementor-element elementor-element-4ef2fbd elementor-align-left elementor-widget elementor-widget-button" data-id="4ef2fbd" data-element_type="widget" data-widget_type="button.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-button-wrapper">
-                                                <a href="#" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
+                                                <a href="/finance-options/" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
                                                     <span class="elementor-button-content-wrapper">
                                                         <span class="elementor-button-icon elementor-align-icon-right">
                                                             <i aria-hidden="true" class="fas fa-money-check-alt"></i> </span>
@@ -1016,7 +1017,7 @@ global $post;
                                                 <li class="elementor-icon-list-item">
                                                     <span class="elementor-icon-list-icon">
                                                         <i aria-hidden="true" class="fas fa-clipboard-check"></i> </span>
-                                                    <span class="elementor-icon-list-text">Carfax</span>
+                                                    <span class="elementor-icon-list-text">Carfax: <a href="<?php echo get_post_meta($post->ID, 'about_the_truck_carfax-url',true); ?>" target="_blank">Click Here</a></span>
                                                 </li>
                                             <?php endif; ?>
                                                 <li class="elementor-icon-list-item">
@@ -1094,7 +1095,7 @@ global $post;
                                     <div class="elementor-element elementor-element-0ba9d5d elementor-align-center elementor-tablet-align-right elementor-widget elementor-widget-button" data-id="0ba9d5d" data-element_type="widget" data-widget_type="button.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-button-wrapper">
-                                                <a href="https://icalcpayment.com/Default.aspx?primary=e116c670-2b2a-4621-88be-f6c84dc1478f" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
+                                                <a href="https://myascentium.com/ApplyNow/CommCredit?ad=PaulMacDonald" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
                                                     <span class="elementor-button-content-wrapper">
                                                         <span class="elementor-button-icon elementor-align-icon-right">
                                                             <i aria-hidden="true" class="fas fa-pencil-alt"></i> </span>
@@ -1133,9 +1134,9 @@ global $post;
                                                     </div>
                                                     <div class="elementor-tab-title elementor-tab-mobile-title" data-tab="2" role="tab">Photos</div>
                                                     <div id="elementor-tab-content-1732" class="elementor-tab-content elementor-clearfix" data-tab="2" role="tabpanel" aria-labelledby="elementor-tab-title-1732">
-                                                        <?php foreach( get_post_meta($post->ID,'vdw_gallery_id')[0] as $img){ ?>
-                                                            <a href="<?php echo wp_get_attachment_url($img); ?>" data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="d0544ac" data-elementor-lightbox-index="0">
-                                                                <img class="swiper-slide-image" src="<?php echo wp_get_attachment_thumb_url( $img ); ?>" alt="88c37fae62_1280" />
+                                                        <?php foreach( ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL as $img){ ?>
+                                                            <a href="<?php echo $img; ?>" data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="d0544ac" data-elementor-lightbox-index="0">
+                                                                <img class="swiper-slide-image" src="<?php echo $img; ?>" alt="88c37fae62_1280" />
                                                             </a>
                                                         <?php }?>
                                                     </div>
@@ -1166,7 +1167,20 @@ global $post;
                                                             <li>No Or Low Upfront Costs</li>
                                                             <li>Delayed Payment Options</li>
                                                             <li>Potential Tax Savings*</li>
-                                                        </ul>
+                                                        </ul><br>
+                                                        <div class="elementor-element elementor-element-0ba9d5d elementor-widget elementor-widget-button" data-id="0ba9d5d" data-element_type="widget" data-widget_type="button.default">
+                                                            <div class="elementor-widget-container">
+                                                                <div class="elementor-button-wrapper">
+                                                                            <a href="https://myascentium.com/ApplyNow/CommCredit?ad=PaulMacDonald" class="elementor-button-link elementor-button elementor-size-sm elementor-animation-sink" role="button">
+                                                                        <span class="elementor-button-content-wrapper">
+                                                                            <span class="elementor-button-icon elementor-align-icon-right">
+                                                                                <i aria-hidden="true" class="fas fa-pencil-alt"></i> </span>
+                                                                            <span class="elementor-button-text">Start Now!</span>
+                                                                        </span>
+                                                                    </a>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1187,7 +1201,24 @@ global $post;
                                     <div class="elementor-element elementor-element-726398d elementor-aspect-ratio-169 elementor-widget elementor-widget-video" data-id="726398d" data-element_type="widget" data-settings="{&quot;aspect_ratio&quot;:&quot;169&quot;}" data-widget_type="video.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-wrapper elementor-fit-aspect-ratio elementor-open-inline">
-                                                <iframe class="elementor-video-iframe" allowfullscreen src="https://www.youtube.com/embed/UW1yh2Mtjj8?feature=oembed&amp;start&amp;end&amp;wmode=opaque&amp;loop=0&amp;controls=1&amp;mute=0&amp;rel=0&amp;modestbranding=0"></iframe> </div>
+                                                <?php 
+                                                    $YTUrl = parse_url(get_post_meta($post->ID, 'about_the_truck_youtube-url', true));
+                                                    
+                                                    if(isset($YTUrl['query'])){
+                                                        parse_str($YTUrl['query'], $query);
+                                                        $videoID = $query['v'];
+                                                    }else{
+                                                        $videoID = str_replace('/','',$YTUrl['path']);
+                                                    }
+                                                
+                                                    if($videoID != ''):
+                                                ?>
+                                                
+                                                <iframe class="elementor-video-iframe" allowfullscreen src="https://www.youtube.com/embed/<?php echo $videoID ?>?feature=oembed&amp;start&amp;end&amp;wmode=opaque&amp;loop=0&amp;controls=1&amp;mute=0&amp;rel=0&amp;modestbranding=0"></iframe> 
+                                                <?php else: ?>
+                                                    <img class="attachment-large size-large" src="/wp-content/uploads/2019/11/Harrisburg_Hershey_Lancaster_Commercial_Photographer-2.jpg" />
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1214,17 +1245,17 @@ global $post;
                                                 <li class="elementor-icon-list-item">
                                                     <span class="elementor-icon-list-icon">
                                                         <i aria-hidden="true" class="fas fa-check"></i> </span>
-                                                    <span class="elementor-icon-list-text">Donec suscipit vehicula turpis sed lutpat Quisque vitae quam neque</span>
+                                                    <span class="elementor-icon-list-text">Excellent Service</span>
                                                 </li>
                                                 <li class="elementor-icon-list-item">
                                                     <span class="elementor-icon-list-icon">
                                                         <i aria-hidden="true" class="fas fa-check"></i> </span>
-                                                    <span class="elementor-icon-list-text">Hot chicken cornhole iPhone lumbersexual heirloom beard fashion axe.​</span>
+                                                    <span class="elementor-icon-list-text">Honest Answers</span>
                                                 </li>
                                                 <li class="elementor-icon-list-item">
                                                     <span class="elementor-icon-list-icon">
                                                         <i aria-hidden="true" class="fas fa-check"></i> </span>
-                                                    <span class="elementor-icon-list-text">Snackwave la croix cornhole, tote bag marfa mixtape gluten-free truffaut YOLO pour-over tacos. </span>
+                                                    <span class="elementor-icon-list-text">Reliable Trucks</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -1276,7 +1307,6 @@ global $post;
                                                     <h3 class="elementor-icon-box-title">
                                                         <span>road tested and approved</span>
                                                     </h3>
-                                                    <p class="elementor-icon-box-description">Aesthetic twee chia lumbersexual hell of chartreuse actually. Vexilogist ethical gastropub deep chartreuse post-ironic.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1298,7 +1328,6 @@ global $post;
                                                     <h3 class="elementor-icon-box-title">
                                                         <span>washed and detailed</span>
                                                     </h3>
-                                                    <p class="elementor-icon-box-description">Aesthetic twee chia lumbersexual hell of chartreuse actually. Vexilogist ethical gastropub deep chartreuse post-ironic.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1318,9 +1347,8 @@ global $post;
                                                 </div>
                                                 <div class="elementor-icon-box-content">
                                                     <h3 class="elementor-icon-box-title">
-                                                        <span>PA Inspected & Serviced</span>
+                                                        <span>PA Inspected &amp; Serviced</span>
                                                     </h3>
-                                                    <p class="elementor-icon-box-description">Aesthetic twee chia lumbersexual hell of chartreuse actually. Vexilogist ethical gastropub deep chartreuse post-ironic.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1346,7 +1374,7 @@ global $post;
                                     <div class="elementor-element elementor-element-7767d574 elementor-invisible elementor-widget elementor-widget-text-editor" data-id="7767d574" data-element_type="widget" data-settings="{&quot;_animation&quot;:&quot;fadeInUp&quot;,&quot;_animation_delay&quot;:200}" data-widget_type="text-editor.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-text-editor elementor-clearfix">
-                                                <p>We will hold it for you for 14 days with a $500 non-refundable deposit (use it towards any truck on the lot)</p>
+                                                <p>We will hold it for you for 14 days with a $500 non-refundable deposit.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1363,7 +1391,7 @@ global $post;
                                                     <span class="elementor-button-content-wrapper">
                                                         <span class="elementor-button-icon elementor-align-icon-right">
                                                             <i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </span>
-                                                        <span class="elementor-button-text">Save it for me!</span>
+                                                        <span class="elementor-button-text">Place A Deposit!</span>
                                                     </span>
                                                 </a>
                                             </div>

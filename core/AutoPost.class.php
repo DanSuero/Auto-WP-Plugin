@@ -9,12 +9,14 @@ class AutoPost {
     private static $args;
     public static $query = array(
         'post_type' => 'sparrow-auto',
-        //'posts_per_page' => -1,
+        'posts_per_page' => -1,
         'meta_query' => array(array(
             'key'     => 'about_the_truck_sale-status',
             'value'   => 'Sold',
             'compare' => '!=',
         )),
+        'meta_key' => 'about_the_truck_year',
+        'orderby' => 'meta_value_num',
     );
     
     public static function get_labels(){
@@ -98,9 +100,37 @@ class AutoPost {
         return $template;
     }
     
-    public static function metaQuery(){
-        $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-        self::$query['paged'] = $paged;
-        return new WP_Query(self::$query);
+    public static function metaQuery($use = ''){
+        if($use == null){
+            $use = self::$query;
+        }
+        
+        return new WP_Query($use);
+    }
+    
+    public static function column_head($columns){
+        $columns = array(
+            "title" => "Title", 
+            "stock_num" => "Stock Number",
+            "vin_num" => "VIN Number",
+            "date" => "Date",
+        );
+        
+        return $columns;
+    }
+    
+    public static function column_data($column, $post_id ){
+        global $post;
+        
+        switch($column){
+            case "stock_num":
+                echo (empty(get_post_meta($post_id, 'about_the_truck_stock-number', true)))? "" : get_post_meta($post_id, 'about_the_truck_stock-number', true);
+            break;
+            case "vin_num":
+                echo (empty(get_post_meta($post_id, 'about_the_truck_vin-number', true)))? "" : get_post_meta($post_id, 'about_the_truck_vin-number', true);
+            break;
+            default:
+            break;
+        }
     }
 }

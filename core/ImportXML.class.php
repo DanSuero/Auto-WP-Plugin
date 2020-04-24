@@ -1,10 +1,11 @@
 <?php
 
 include_once dirname(__FILE__).'/../../../../wp-load.php';
+include_once "AutoPost.class.php";
 
 class ImportXML{
     private $xml;
-    private static $converted_xml;
+    public static $converted_xml;
     
     public function set_xml_URL($url){
         $this->xml = $url;
@@ -36,6 +37,8 @@ class ImportXML{
     }
     
     public static function add_import_btn(){
+        
+        
         if ($_GET["post_type"] != "sparrow-auto") {
             return;
         }?>
@@ -62,7 +65,7 @@ class ImportXML{
     <?php
     }
     
-    public static function grabVIN($vin){
+   public static function grabVIN($vin){
         $grabber = new WP_Query(array(
             'post_type' => 'sparrow-auto',
             'meta_query' => array(array(
@@ -76,12 +79,12 @@ class ImportXML{
     }
     
     public static function inserting_trucks($import){
-        if($import != true){
+        if($import != "true"){
             exit; //yep lets stop.
         }
-        set_time_limit(300);
+        set_time_limit(2700);
         foreach(self::$converted_xml as $item){
-            if(self::grabVIN($item->VIN)){    
+            if(self::grabVIN("$item->VIN") == 0){    
                 $currentTitle = $item->Year ." ". $item->Make ." ". $item->Model ." ".$item->ModelNum ;
                 $inserter = array();
                 $grabPhotos = array();
