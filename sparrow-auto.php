@@ -38,47 +38,11 @@ if(!function_exists( 'start_sparrow_auto' )){
     if(!wp_next_scheduled( 'auto_hourly' )){    
         wp_schedule_event( time(), 'hourly', 'auto_hourly' );
     }
-    add_action("auto_hourly", "autoXMLUpdater");
+    
     function autoXMLUpdater(){
-        //Getting all trucks in current inventory
-        $postQuery = AutoPost::metaQuery();
-        
-        //Creating a new truck object
-        $trucks = new ImportXML();
-        
-        //Setting XML URL
-        $trucks->set_xml_URL("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1&Features=1");
-        
-        $xmlQuery = array();
-
-        foreach(ImportXML::$converted_xml->Vehicle as $data){
-            array_push($xmlQuery, "$data->VIN");
-        }
-        
-        if(count(ImportXML::$converted_xml->Vehicle) > 0){
-            set_time_limit(2700);
-            foreach($postQuery->posts as $post){
-                $currentPostVin = get_post_meta($post->ID, 'about_the_truck_vin-number', true);
-                $currentPostPrice = get_post_meta($post->ID, 'about_the_truck_internet-price', true);
-                $searchingVin = array_search($currentPostVin, $xmlQuery);
-
-                $newPrice = ImportXML::$converted_xml->Vehicle[$searchingVin]->InternetPrice;
-
-                if($currentPostPrice != "$newPrice"){
-                    update_post_meta($post->ID, 'about_the_truck_internet-price', "$newPrice");
-                }
-
-                if(ImportXML::$converted_xml->Vehicle[$searchingVin]->SaleStatus == "Sold"){
-                    wp_trash_post($post->ID);
-                }elseif($searchingVin == ''){
-                    wp_trash_post($post->ID);
-                }
-
-            }
-        }
-        
-        
-        
-        ImportXML::inserting_trucks("true");
+        $xmlString = getXML::get_string("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1");
+        DeleteTrucks::remove($xmlString["Vehicle"]);
+        AddTrucks::import_trucks($xmlString["Vehicle"]);
     }
+    add_action("auto_hourly", "autoXMLUpdater");
 }

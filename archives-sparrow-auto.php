@@ -6,15 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 
 $query = new Search();
-
-//var_dump($query->Query());
 $trucks = AutoPost::metaQuery($query->Query());
-
-$truck = new ImportXML();
-$truck->set_xml_URL("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1&Features=1");
+$gettingTrucks = getXML::get_string("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1");
 $xmlQuery = array();
-foreach(ImportXML::$converted_xml->Vehicle as $data){
-    array_push($xmlQuery, "$data->VIN");
+
+foreach($gettingTrucks["Vehicle"] as $data){
+    array_push($xmlQuery, $data['VIN']);
 }
 
 Style::archive();
@@ -30,8 +27,7 @@ Style::archive();
         <?php while ( $trucks->have_posts() ) { $trucks->the_post(); 
             $grab = get_post_meta(get_the_ID(), "about_the_truck_vin-number", true);
             $found = array_search($grab, $xmlQuery);
-            
-            if(ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL[0] != ""){
+            if($gettingTrucks["Vehicle"][$found]["PhotoURLs"]["PhotoURL"][0] != ""){
         ?>
         
         <article class="post row column-row">
@@ -39,7 +35,7 @@ Style::archive();
                 <div class="card">
                     <div class="img-section">
                         <a href="<?php echo get_permalink(); ?>" class="img-link">
-                        <img width="800" height="600" src="<?php echo ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL[0]; ?>" class="attachment-large size-large" alt="">
+                        <img width="800" height="600" src="<?php echo $gettingTrucks["Vehicle"][$found]["PhotoURLs"]["PhotoURL"][0]; ?>" class="attachment-large size-large" alt="">
                        </a>
                     </div>
                     <div class="text-section">

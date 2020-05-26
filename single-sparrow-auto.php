@@ -9,16 +9,12 @@ global $post;
 
 $grab = get_post_meta($post->ID, "about_the_truck_vin-number", true);
 
-$trucks = new ImportXML();
-$trucks->set_xml_URL("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1&Features=1");
+$trucks = getXML::get_string("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1");
 $xmlQuery = array();
-foreach(ImportXML::$converted_xml->Vehicle as $data){
-    array_push($xmlQuery, "$data->VIN");
+foreach($trucks["Vehicle"] as $data){
+    array_push($xmlQuery, $data["VIN"]);
 }
-
 $found = array_search($grab, $xmlQuery);
-
-//var_dump(get_post_meta($post->ID,"vdw_gallery_id",true));
 ?>
 
 <style>
@@ -941,14 +937,14 @@ $found = array_search($grab, $xmlQuery);
                                     <div class="elementor-element elementor-element-b1e70c6 elementor-widget elementor-widget-image" data-id="b1e70c6" data-element_type="widget" data-widget_type="image.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-image">
-                                                <img width="800" height="600" src="<?php echo ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL[0]; ?>" class="attachment-large size-large" alt="" /> </div>
+                                                <img width="800" height="600" src="<?php echo $trucks["Vehicle"][$found]["PhotoURLs"]["PhotoURL"][0]; ?>" class="attachment-large size-large" alt="" /> </div>
                                         </div>
                                     </div>
                                     <div class="elementor-element elementor-element-d0544ae elementor-arrows-position-outside elementor-pagination-position-outside elementor-widget elementor-widget-image-carousel" data-id="d0544ae" data-element_type="widget" data-settings="{&quot;slides_to_show&quot;:&quot;5&quot;,&quot;slides_to_show_tablet&quot;:&quot;3&quot;,&quot;slides_to_show_mobile&quot;:&quot;3&quot;,&quot;navigation&quot;:&quot;both&quot;,&quot;pause_on_hover&quot;:&quot;yes&quot;,&quot;autoplay&quot;:&quot;yes&quot;,&quot;autoplay_speed&quot;:5000,&quot;infinite&quot;:&quot;yes&quot;,&quot;speed&quot;:500,&quot;direction&quot;:&quot;ltr&quot;}" data-widget_type="image-carousel.default">
                                         <div class="elementor-widget-container">
                                             <div class="elementor-image-carousel-wrapper swiper-container" dir="ltr">
                                                 <div class="elementor-image-carousel swiper-wrapper">
-                                                    <?php foreach( ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL as $img){ ?>
+                                                    <?php foreach( $trucks["Vehicle"][$found]["PhotoURLs"]["PhotoURL"] as $img){ ?>
                                                     <div class="swiper-slide"><a href="<?php echo $img; ?>" data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="d0544ae" data-elementor-lightbox-index="0">
                                                             <figure class="swiper-slide-inner"><img class="swiper-slide-image" src="<?php echo $img; ?>" alt="88c37fae62_1280" /></figure>
                                                         </a></div>
@@ -1134,7 +1130,7 @@ $found = array_search($grab, $xmlQuery);
                                                     </div>
                                                     <div class="elementor-tab-title elementor-tab-mobile-title" data-tab="2" role="tab">Photos</div>
                                                     <div id="elementor-tab-content-1732" class="elementor-tab-content elementor-clearfix" data-tab="2" role="tabpanel" aria-labelledby="elementor-tab-title-1732">
-                                                        <?php foreach( ImportXML::$converted_xml->Vehicle[$found]->PhotoURLs->PhotoURL as $img){ ?>
+                                                        <?php foreach( $trucks["Vehicle"][$found]["PhotoURLs"]["PhotoURL"] as $img){ ?>
                                                             <a href="<?php echo $img; ?>" data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="d0544ac" data-elementor-lightbox-index="0">
                                                                 <img class="swiper-slide-image" src="<?php echo $img; ?>" alt="88c37fae62_1280" />
                                                             </a>
