@@ -43,6 +43,7 @@ if(!function_exists( 'start_sparrow_auto' )){
         $xmlString = getXML::get_string("https://clients.automanager.com/0254448e2be24576857eb0d1e26a96bf/inventory.xml?ID=ee30fb1027&VehicleCategory=Passenger&Photos=1");
         DeleteTrucks::remove($xmlString["Vehicle"]);
         AddTrucks::import_trucks($xmlString["Vehicle"]);
+        UpdateTrucks::update_price($xmlString["Vehicle"]);
     }
     add_action("auto_hourly", "autoXMLUpdater");
 }

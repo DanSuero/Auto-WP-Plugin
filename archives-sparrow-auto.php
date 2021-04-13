@@ -14,6 +14,16 @@ foreach($gettingTrucks["Vehicle"] as $data){
     array_push($xmlQuery, $data['VIN']);
 }
 
+$find = new WP_Query(array(
+                    'post_type' => 'sparrow-auto',
+                    'posts_per_page' => -1,
+                    'meta_query' => array(array(
+                        'key'     => 'about_the_truck_vin-number',
+                        'value'   => "1FVACWT1GHHG3274",
+                        'compare' => '=',
+                    ))
+                ));
+echo $find->post_count;
 Style::archive();
 ?>
 
